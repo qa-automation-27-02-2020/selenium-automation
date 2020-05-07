@@ -1,90 +1,74 @@
 package io.react.realworld;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
+import com.hillel.auto.User;
+import com.hillel.auto.utils.UserData;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created by alpa on 5/3/20
  */
-public class UserRegistrationTest {
-
-    private WebDriver driver;
-
-    @BeforeClass
-    public void setUpDriver() {
-        WebDriverManager.chromedriver().setup();
-    }
-
-    @BeforeMethod
-    public void setUp() {
-        driver = new ChromeDriver();
-        driver.manage().timeouts().implicitlyWait(4000, TimeUnit.MILLISECONDS);
-    }
-
-    @AfterMethod
-    public void tearDown() {
-        driver.quit();
-    }
+public class UserRegistrationTest extends TestBase {
 
     @Test
     public void registrationTest() {
-        driver.get("https://react-redux.realworld.io/");
-//        #main > div > nav > div > ul > li:nth-child(3) > a
-//        WebElement signUpButton = driver.findElement(By.cssSelector("#main > div > nav > div > ul > li:nth-child(3) > a"));
-//        WebElement signUpButton = driver.findElement(By.linkText("Sign up"));
-        WebElement signUpButton = driver.findElement(By.cssSelector("a[href='#register']"));
-        signUpButton.click();
+        clickRegistrationButton();
 
-//        String currentUrl = driver.getCurrentUrl();
-//        assertThat(currentUrl).contains("register");
-        WebElement singUpHeader = driver.findElement(By.cssSelector(".auth-page h1"));
-        assertThat(singUpHeader.getText()).isEqualTo("Sign Up");
+        checkPage("Sign Up");
 
-        WebElement singUpForm = driver.findElement(By.cssSelector(".auth-page form"));
-        assertThat(singUpForm.isDisplayed()).isTrue();
+        assertThat(singForm().isDisplayed()).isTrue();
 
-        String userName = "realapp" + new Random().nextInt(10000);
-        String email = userName + "@mail.com";
-        String password = "qwerty123";
+        User user = UserData.randomUser();
 
-        WebElement userNameField = singUpForm.findElement(By.cssSelector("input[type='text']"));
-        userNameField.clear();
-        userNameField.sendKeys(userName);
+        inputText(userNameField(), user.getUserName());
+        inputText(emailField(), user.getEmail());
+        inputText(passwordField(), user.getPassword());
 
-        WebElement emailField = singUpForm.findElement(By.cssSelector("input[type='email']"));
-        emailField.clear();
-        emailField.sendKeys(email);
+        clickSingInButton();
 
-        WebElement passwordField = singUpForm.findElement(By.cssSelector("input[type='password']"));
-        passwordField.clear();
-        passwordField.sendKeys(password);
-
-        WebElement signInButton = singUpForm.findElement(By.cssSelector("button[type='submit']"));
-        signInButton.click();
-
-        WebElement userInfo = driver.findElement(By.cssSelector("[href='#@" +userName+"']"));
-        assertThat(userInfo.isDisplayed()).isTrue();
+        userShouldBeLoggedIn(user.getUserName());
     }
 
     @Test
-    public void loginTest() {
-        String user = "realapp";
-        String email = "realapp@mail.com";
-        String password = "qwerty123";
+    public void validateRegistrationForm() {
+        clickRegistrationButton();
 
+        checkPage("Sign Up");
+
+        clickSingInButton();
+
+        List<WebElement> errorsMessage = driver.findElements(By.cssSelector(".error-messages>li"));
+
+//        assertThat(errorsMessage.get(0).getText()).isEqualTo("email can't be blank");
+//        assertThat(errorsMessage.get(1).getText()).isEqualTo("password can't be blank");
+//        assertThat(errorsMessage.get(2).getText()).isEqualTo("username can't be blankis too short (minimum is 1 character)is too long (maximum is 20 characters)");
+
+//        List<String> errors = new ArrayList<>();
+//        for (WebElement error : errorsMessage) {
+//            errors.add(error.getText());
+//        }
+        List<String> errors = errorsMessage.stream()
+                .map(WebElement::getText).collect(Collectors.toList());
+        assertThat(errors).hasSize(3);
+
+        assertThat(errors).contains("email can't be blank",
+                "password can't be blank",
+                "username can't be blankis too short (minimum is 1 character)is too long (maximum is 20 characters)");
     }
 
 
+    private void clickRegistrationButton() {
+        WebElement signUpButton = driver.findElement(By.cssSelector("a[href='#register']"));
+        signUpButton.click();
+    }
+
+    private WebElement userNameField() {
+        return singForm().findElement(By.cssSelector("input[type='text']"));
+    }
 }
