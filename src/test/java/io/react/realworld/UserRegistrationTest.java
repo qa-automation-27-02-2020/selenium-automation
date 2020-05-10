@@ -1,6 +1,6 @@
 package io.react.realworld;
 
-import com.hillel.auto.User;
+import com.hillel.auto.model.User;
 import com.hillel.auto.utils.UserData;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;

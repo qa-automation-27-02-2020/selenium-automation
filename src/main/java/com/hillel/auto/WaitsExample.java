@@ -1,4 +1,4 @@
-package com.hillel.auto.model;
+package com.hillel.auto;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -10,7 +10,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 import java.util.NoSuchElementException;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by alpa on 12/26/19
@@ -32,6 +31,11 @@ public class WaitsExample {
 
     public WebElement visibilityOfElementLocated(By locator) {
         WebDriverWait wait = new WebDriverWait(driver, DEFAULT_WAIT_TIME);
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+    }
+
+    public WebElement visibilityOfElementLocated(By locator, long timeout) {
+        WebDriverWait wait = new WebDriverWait(driver, timeout);
         return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 

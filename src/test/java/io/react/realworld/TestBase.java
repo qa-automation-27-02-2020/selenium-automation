@@ -70,4 +70,9 @@ public class TestBase {
         assertThat(userInfo.isDisplayed()).isTrue();
     }
 
+    protected void clickLoginButton() {
+        WebElement signUpButton = driver.findElement(By.cssSelector("a[href='#login']"));
+        signUpButton.click();
+    }
+
 }
