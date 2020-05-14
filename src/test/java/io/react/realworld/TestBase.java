@@ -1,13 +1,15 @@
 package io.react.realworld;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
+import com.hillel.auto.config.WebDriverConfig;
+import com.hillel.auto.config.WebDriverFactory;
+import com.hillel.auto.listener.TestMethodExecutionListener;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
 
 import java.util.concurrent.TimeUnit;
 
@@ -16,18 +18,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Created by alpa on 5/7/20
  */
+@Listeners({TestMethodExecutionListener.class})
 public class TestBase {
 
     protected WebDriver driver;
 
     @BeforeClass
     public void setUpDriver() {
-        WebDriverManager.chromedriver().setup();
+        WebDriverConfig.load();
     }
 
     @BeforeMethod
     public void setUp() {
-        driver = new ChromeDriver();
+        driver = WebDriverFactory.createDriver();
         driver.manage().timeouts().implicitlyWait(4000, TimeUnit.MILLISECONDS);
         driver.get("https://react-redux.realworld.io/");
     }

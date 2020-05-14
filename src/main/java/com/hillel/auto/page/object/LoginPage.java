@@ -15,17 +15,20 @@ public class LoginPage extends BasePage {
 
 
     public HomePage login(String email, String password) {
+        System.out.println("Login as user");
         inputEmail(email);
         inputPassword(password);
         return clickSingInButton();
     }
 
     public void inputEmail(String email) {
+        System.out.println("Input email");
         WebElement emailField = singForm().findElement(By.cssSelector("input[type='email']"));
         inputText(emailField, email);
     }
 
     public void inputPassword(String password) {
+        System.out.println("Input password");
         WebElement passwordField = singForm().findElement(By.cssSelector("input[type='password']"));
         inputText(passwordField, password);
     }
@@ -35,6 +38,7 @@ public class LoginPage extends BasePage {
     }
 
     public HomePage clickSingInButton() {
+        System.out.println("Click Sing In button");
         WebElement signInButton = singForm().findElement(By.cssSelector("button[type='submit']"));
         signInButton.click();
         return new HomePage(driver);
