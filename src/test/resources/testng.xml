@@ -7,9 +7,9 @@
     </listeners>
 
     <test name="Login tests">
-        <packages>
-            <package name="io.react.realworld.LoginTest"/>
-        </packages>
+        <classes>
+            <class name="io.react.realworld.LoginTest"/>
+        </classes>
     </test>
 
 </suite>

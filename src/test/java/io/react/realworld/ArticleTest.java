@@ -7,15 +7,8 @@ import com.hillel.auto.page.object.LoginPage;
 import com.hillel.auto.page.object.NewArticlePage;
 import com.hillel.auto.page.object.ProfilePage;
 import com.hillel.auto.utils.UserData;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -36,7 +29,7 @@ public class ArticleTest extends TestBase {
         assertThat(loginPage.getPageTitle()).isEqualTo("Sign In");
 
         homePage = loginPage.login(user.getEmail(), user.getPassword());
-        assertThat(homePage.isUserLoggedIn(user.getUserName())).isTrue();
+        assertThat(homePage.isUserLoggedIn(user.getUsername())).isTrue();
     }
 
     @Test

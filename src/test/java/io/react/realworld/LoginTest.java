@@ -25,7 +25,7 @@ public class LoginTest extends TestBase {
 
         HomePage homePage = loginPage.login(user.getEmail(), user.getPassword());
         System.out.println("Check that user ig logged in");
-        assertThat(homePage.isUserLoggedIn(user.getUserName())).isTrue();
+        assertThat(homePage.isUserLoggedIn(user.getUsername())).isTrue();
     }
 
 }

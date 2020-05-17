@@ -26,13 +26,13 @@ public class UserRegistrationTest extends TestBase {
 
         User user = UserData.randomUser();
 
-        inputText(userNameField(), user.getUserName());
+        inputText(userNameField(), user.getUsername());
         inputText(emailField(), user.getEmail());
         inputText(passwordField(), user.getPassword());
 
         clickSingInButton();
 
-        userShouldBeLoggedIn(user.getUserName());
+        userShouldBeLoggedIn(user.getUsername());
     }
 
     @Test
