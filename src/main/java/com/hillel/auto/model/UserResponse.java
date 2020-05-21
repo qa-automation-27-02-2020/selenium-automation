@@ -3,7 +3,7 @@ package com.hillel.auto.model;
 /**
  * Created by alpa on 5/17/20
  */
-public class ApiUser {
+public class UserResponse {
 
     private User user;
 

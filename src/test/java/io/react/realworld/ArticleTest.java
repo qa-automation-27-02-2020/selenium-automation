@@ -1,14 +1,22 @@
 package io.react.realworld;
 
+import com.hillel.auto.model.Article;
 import com.hillel.auto.model.User;
 import com.hillel.auto.page.object.ArticleDetailsPage;
 import com.hillel.auto.page.object.HomePage;
 import com.hillel.auto.page.object.LoginPage;
 import com.hillel.auto.page.object.NewArticlePage;
 import com.hillel.auto.page.object.ProfilePage;
+import com.hillel.auto.service.ArticleService;
+import com.hillel.auto.service.UserService;
 import com.hillel.auto.utils.UserData;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -17,11 +25,19 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class ArticleTest extends TestBase {
 
-    private User user = UserData.defaultUser();
+    private UserService userService = new UserService();
+    private ArticleService articleService;
+    private User user;
+    private Article article;
     private HomePage homePage;
 
-    @BeforeClass
+    @BeforeMethod
     public void login() {
+        user = userService.userRegistration();
+        articleService = new ArticleService(user.getToken());
+
+        article = articleService.createArticle(getArticle());
+
         clickLoginButton();
 
         LoginPage loginPage = new LoginPage(driver);
@@ -30,6 +46,11 @@ public class ArticleTest extends TestBase {
 
         homePage = loginPage.login(user.getEmail(), user.getPassword());
         assertThat(homePage.isUserLoggedIn(user.getUsername())).isTrue();
+    }
+
+    @AfterMethod
+    public void cleanData() {
+//        TODO delete article
     }
 
     @Test
@@ -45,9 +66,27 @@ public class ArticleTest extends TestBase {
     }
 
     @Test
+    public void editArticleTest() {
+        ProfilePage profilePage = homePage.clickProfile();
+        List<String> allArticleTitles = profilePage.getAllArticleTitles();
+        assertThat(allArticleTitles).contains(article.getTitle());
+//        TODO add edit steps
+    }
+
+
+    @Test
     public void checkArticleSize() {
         ProfilePage profilePage = homePage.clickProfile();
         assertThat(profilePage.getArticlesSize()).isGreaterThan(2);
+    }
+
+    private Article getArticle() {
+        Article article = new Article();
+        article.setTitle("First article");
+        article.setDescription("Super Article desc");
+        article.setBody("test hoho");
+        article.setTagList(Arrays.asList("test", "hoho"));
+        return article;
     }
 
 
