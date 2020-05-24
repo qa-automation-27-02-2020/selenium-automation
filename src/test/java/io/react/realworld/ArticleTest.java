@@ -10,6 +10,7 @@ import com.hillel.auto.page.object.ProfilePage;
 import com.hillel.auto.service.ArticleService;
 import com.hillel.auto.service.UserService;
 import com.hillel.auto.utils.UserData;
+import org.openqa.selenium.Cookie;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -38,6 +39,10 @@ public class ArticleTest extends TestBase {
 
         article = articleService.createArticle(getArticle());
 
+//        Cookie cookie = new Cookie("Authorization", "Token " + user.getToken());
+//        driver.manage().addCookie(cookie);
+//        driver.navigate().refresh();
+
         clickLoginButton();
 
         LoginPage loginPage = new LoginPage(driver);
@@ -50,7 +55,7 @@ public class ArticleTest extends TestBase {
 
     @AfterMethod
     public void cleanData() {
-//        TODO delete article
+        articleService.deleteArticle(article.getSlug());
     }
 
     @Test
